@@ -15,7 +15,7 @@ import {
 // ============================================
 // CONFIGURAÇÃO: Insira seu IP local aqui
 // ============================================
-const API_BASE_URL = 'http://192.168.178.171:8000';
+const API_BASE_URL = 'http://192.168.1.40:8000';
 // ============================================
 
 export default function App() {
@@ -81,7 +81,7 @@ export default function App() {
       console.log('Dados recebidos:', data);
       
       if (data && Array.isArray(data) && data.length > 0) {
-        setDistanciaAtual(data[0]);
+        setDistanciaAtual(data[data.length-1]); // Última leitura
         setHistoricoDistancias(data);
         setErro(null); // Limpa qualquer erro anterior
         console.log('✅ Dados carregados com sucesso!');
