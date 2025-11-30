@@ -15,7 +15,7 @@ import {
 // ============================================
 // CONFIGURAÇÃO: Insira seu IP local aqui
 // ============================================
-const API_BASE_URL = 'http://192.168.1.40:8000';
+const API_BASE_URL = 'http://10.156.132.126:8000';
 // ============================================
 
 export default function App() {
