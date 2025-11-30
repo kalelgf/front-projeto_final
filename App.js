@@ -33,7 +33,7 @@ export default function App() {
   const [refreshing, setRefreshing] = useState(false);
 
   
-  // FUNÇÃO: Buscar leituras de distância
+  // FUNÇÃO: Buscar leituras de distância *
 
   const buscarDistancias = async () => {
     try {
@@ -100,7 +100,7 @@ export default function App() {
   };
 
   
-  // FUNÇÃO: Buscar limite atual
+  // FUNÇÃO: Buscar limite atual *
   
   const buscarLimite = async () => {
     try {
@@ -149,7 +149,7 @@ export default function App() {
   };
 
 
-  // FUNÇÃO: Salvar novo limite
+  // FUNÇÃO: Salvar novo limite *
 
   const salvarLimite = async () => {
     if (!novoLimite || isNaN(novoLimite)) {
@@ -195,7 +195,7 @@ export default function App() {
   };
 
 
-  // EFFECT: Carregar dados iniciais
+  // EFFECT: Carregar dados iniciais *
 
   useEffect(() => {
     buscarDistancias();
@@ -203,7 +203,7 @@ export default function App() {
   }, []);
 
 
-  // EFFECT: Polling de distâncias (a cada 3s)
+  // EFFECT: Polling de distâncias (a cada 3s) *
 
   useEffect(() => {
     const intervalo = setInterval(() => {
@@ -248,7 +248,7 @@ export default function App() {
   );
 
 
-  // RENDER PRINCIPAL
+  // RENDER PRINCIPAL *
 
   return (
     <ScrollView
