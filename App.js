@@ -12,11 +12,9 @@ import {
   Alert,
 } from 'react-native';
 
-// ============================================
-// CONFIGURAÇÃO: Insira seu IP local aqui
-// ============================================
+// Configuração do IP
 const API_BASE_URL = 'http://10.156.132.126:8000';
-// ============================================
+
 
 export default function App() {
   // Estados para monitoramento
@@ -34,9 +32,9 @@ export default function App() {
   const [erro, setErro] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  // ============================================
+  
   // FUNÇÃO: Buscar leituras de distância
-  // ============================================
+
   const buscarDistancias = async () => {
     try {
       console.log('Buscando distâncias em:', `${API_BASE_URL}/logging/distancias`);
@@ -101,9 +99,9 @@ export default function App() {
     }
   };
 
-  // ============================================
+  
   // FUNÇÃO: Buscar limite atual
-  // ============================================
+  
   const buscarLimite = async () => {
     try {
       console.log('Buscando limite em:', `${API_BASE_URL}/controle/limite`);
@@ -150,9 +148,9 @@ export default function App() {
     }
   };
 
-  // ============================================
+
   // FUNÇÃO: Salvar novo limite
-  // ============================================
+
   const salvarLimite = async () => {
     if (!novoLimite || isNaN(novoLimite)) {
       Alert.alert('Erro', 'Por favor, insira um valor numérico válido');
@@ -187,26 +185,26 @@ export default function App() {
     }
   };
 
-  // ============================================
+
   // FUNÇÃO: Atualizar dados (pull to refresh)
-  // ============================================
+
   const onRefresh = async () => {
     setRefreshing(true);
     await Promise.all([buscarDistancias(), buscarLimite()]);
     setRefreshing(false);
   };
 
-  // ============================================
+
   // EFFECT: Carregar dados iniciais
-  // ============================================
+
   useEffect(() => {
     buscarDistancias();
     buscarLimite();
   }, []);
 
-  // ============================================
+
   // EFFECT: Polling de distâncias (a cada 3s)
-  // ============================================
+
   useEffect(() => {
     const intervalo = setInterval(() => {
       buscarDistancias();
@@ -215,9 +213,9 @@ export default function App() {
     return () => clearInterval(intervalo);
   }, []);
 
-  // ============================================
+
   // FUNÇÃO: Formatar data/hora
-  // ============================================
+
   const formatarDataHora = (dataHoraString) => {
     try {
       const data = new Date(dataHoraString);
@@ -234,9 +232,9 @@ export default function App() {
     }
   };
 
-  // ============================================
+
   // RENDER: Item do histórico
-  // ============================================
+
   const renderItemHistorico = ({ item, index }) => (
     <View style={styles.itemHistorico}>
       <View style={styles.itemHistoricoHeader}>
@@ -249,9 +247,9 @@ export default function App() {
     </View>
   );
 
-  // ============================================
+
   // RENDER PRINCIPAL
-  // ============================================
+
   return (
     <ScrollView
       style={styles.container}
@@ -367,9 +365,9 @@ export default function App() {
   );
 }
 
-// ============================================
+
 // ESTILOS
-// ============================================
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
