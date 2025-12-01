@@ -13,7 +13,8 @@ import {
 } from 'react-native';
 
 // Configuração do IP
-const API_BASE_URL = 'http://10.156.132.126:8000';
+// const API_BASE_URL = 'http://10.156.132.126:8000';
+const API_BASE_URL = 'http://localhost:8000';
 
 
 export default function App() {
@@ -21,18 +22,18 @@ export default function App() {
   const [distanciaAtual, setDistanciaAtual] = useState(null);
   const [historicoDistancias, setHistoricoDistancias] = useState([]);
   const [loadingDistancias, setLoadingDistancias] = useState(true);
-  
+
   // Estados para configuração de limite
   const [limiteAtual, setLimiteAtual] = useState('');
   const [novoLimite, setNovoLimite] = useState('');
   const [loadingLimite, setLoadingLimite] = useState(true);
   const [salvandoLimite, setSalvandoLimite] = useState(false);
-  
+
   // Estados gerais
   const [erro, setErro] = useState(null);
   const [refreshing, setRefreshing] = useState(false);
 
-  
+
   // FUNÇÃO: Buscar leituras de distância *
 
   const buscarDistancias = async () => {
@@ -45,28 +46,28 @@ export default function App() {
           'Content-Type': 'application/json',
         },
       });
-      
+
       console.log('Status da resposta:', response.status);
       console.log('Headers:', response.headers);
-      
+
       if (response.status === 404) {
         setErro('Endpoint /logging/distancias não encontrado no backend');
         return;
       }
-      
+
       if (response.status === 501) {
         setErro('⚠️ Arduino desconectado - Aguardando leituras do sensor');
         setLoadingDistancias(false);
         return;
       }
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error(`Erro ${response.status}:`, errorText);
         setErro(`Backend retornou erro ${response.status}`);
         return;
       }
-      
+
       const contentType = response.headers.get('content-type');
       if (!contentType || !contentType.includes('application/json')) {
         const text = await response.text();
@@ -74,10 +75,10 @@ export default function App() {
         setErro('Backend não retornou JSON válido');
         return;
       }
-      
+
       const data = await response.json();
       console.log('Dados recebidos:', data);
-      
+
       if (data && Array.isArray(data) && data.length > 0) {
         setDistanciaAtual(data[data.length-1]); // Última leitura
         setHistoricoDistancias(data);
@@ -99,9 +100,9 @@ export default function App() {
     }
   };
 
-  
+
   // FUNÇÃO: Buscar limite atual *
-  
+
   const buscarLimite = async () => {
     try {
       console.log('Buscando limite em:', `${API_BASE_URL}/controle/limite`);
@@ -112,23 +113,23 @@ export default function App() {
           'Content-Type': 'application/json',
         },
       });
-      
+
       console.log('Status limite:', response.status);
-      
+
       if (response.status === 404) {
         setErro('Endpoint /controle/limite não encontrado');
         return;
       }
-      
+
       if (!response.ok) {
         const errorText = await response.text();
         console.error(`Erro ${response.status}:`, errorText);
         return;
       }
-      
+
       const data = await response.json();
       console.log('Limite recebido:', data);
-      
+
       if (data && Array.isArray(data) && data.length > 0) {
         const limite = data[0].limite.toString();
         setLimiteAtual(limite);
@@ -158,7 +159,7 @@ export default function App() {
     }
 
     setSalvandoLimite(true);
-    
+
     try {
       const response = await fetch(`${API_BASE_URL}/controle/limite`, {
         method: 'PUT',
@@ -169,11 +170,11 @@ export default function App() {
           limite: parseInt(novoLimite),
         }),
       });
-      
+
       if (!response.ok) {
         throw new Error('Erro ao salvar limite');
       }
-      
+
       setLimiteAtual(novoLimite);
       Alert.alert('Sucesso', 'Limite salvo com sucesso!');
       setErro(null);
@@ -242,7 +243,7 @@ export default function App() {
         <Text style={styles.itemHistoricoDistancia}>{item.distancia} cm</Text>
       </View>
       <Text style={styles.itemHistoricoData}>
-        {formatarDataHora(item.dataHoraLeitura)}
+        {formatarDataHora(item.datahoraleitura)}
       </Text>
     </View>
   );
@@ -273,7 +274,7 @@ export default function App() {
       {/* CARD: MONITORAMENTO DE DISTÂNCIA */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>📡 Monitoramento de Sensor</Text>
-        
+
         {loadingDistancias && !distanciaAtual ? (
           <ActivityIndicator size="large" color="#4A90E2" style={styles.loader} />
         ) : distanciaAtual ? (
@@ -285,7 +286,7 @@ export default function App() {
                 {distanciaAtual.distancia} <Text style={styles.unidade}>cm</Text>
               </Text>
               <Text style={styles.leituraAtualData}>
-                {formatarDataHora(distanciaAtual.dataHoraLeitura)}
+                {formatarDataHora(distanciaAtual.datahoraleitura)}
               </Text>
             </View>
 
@@ -315,7 +316,7 @@ export default function App() {
       {/* CARD: CONFIGURAÇÃO DE LIMITE */}
       <View style={styles.card}>
         <Text style={styles.cardTitle}>⚙️ Configuração de Limite</Text>
-        
+
         {loadingLimite && !limiteAtual ? (
           <ActivityIndicator size="large" color="#4A90E2" style={styles.loader} />
         ) : (
@@ -443,7 +444,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     lineHeight: 20,
   },
-  
+
   // Estilos: Leitura Atual
   leituraAtualContainer: {
     backgroundColor: '#E8F4FF',
@@ -567,7 +568,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  
+
   // Estilos: Footer
   footer: {
     padding: 20,
